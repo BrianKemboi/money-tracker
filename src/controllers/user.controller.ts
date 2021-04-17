@@ -107,6 +107,23 @@ export class UserController {
     return this.userRepository.findById(id, filter);
   }
 
+  @get('/users/{id}/summary')
+  @response(200, {
+    description: 'User Summary',
+  })
+  async findSummaryById(@param.path.string('id') id: string) {
+    const user = await this.userRepository.findById(id);
+
+    const walletCount = user.wallets.length;
+    const balance = user.wallets[user.wallets.length - 1].balance;
+
+    return {
+      ...user,
+      walletCount: walletCount,
+      totalBalance: balance,
+    };
+  }
+
   @patch('/users/{id}')
   @response(204, {
     description: 'User PATCH success',
