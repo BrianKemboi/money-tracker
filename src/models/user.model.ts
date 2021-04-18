@@ -1,4 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Wallet} from './wallet.model';
 
 @model()
@@ -7,7 +7,7 @@ export class User extends Entity {
     type: 'string',
     id: true,
     generated: false,
-    required: true,
+    required: false,
   })
   id: string;
 
