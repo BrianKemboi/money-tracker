@@ -1,5 +1,6 @@
 // Transaction Utility
 
+import Dinero from 'dinero.js';
 import {Transaction} from '../../models';
 import {TransactionRepository, WalletRepository} from '../../repositories';
 
@@ -14,15 +15,32 @@ export const updateWallet = async (
 ): Promise<Transaction> => {
   const walletId = transaction.walletId;
   const wallet = await walletRepository.findById(walletId);
+
   switch (transaction.type) {
     case transactionType.deposit:
       // Add to the balance
-      wallet.balance = wallet.balance + transaction.amount;
+      const dineroSum = Dinero({
+        amount: wallet.balance,
+        currency: wallet.currency,
+      }).add(Dinero({amount: transaction.amount, currency: wallet.currency}));
+
+      wallet.balance = dineroSum.getAmount();
+      wallet.balanceFormated = dineroSum.toFormat();
       transaction.balance = wallet.balance;
       break;
     case transactionType.withdrawal:
       // Subrtact from the balance
-      wallet.balance = wallet.balance - transaction.amount;
+      const dineroDiff = Dinero({
+        amount: wallet.balance,
+        currency: wallet.currency,
+      }).subtract(
+        Dinero({
+          amount: transaction.amount,
+          currency: wallet.currency,
+        }),
+      );
+      wallet.balance = dineroDiff.getAmount();
+      wallet.balanceFormated = dineroDiff.toFormat();
       transaction.balance = wallet.balance;
       break;
   }
