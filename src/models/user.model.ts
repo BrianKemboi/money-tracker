@@ -17,6 +17,12 @@ export class User extends Entity {
   })
   name: string;
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  preferedCurrency: string; // ISO 4217 currency code
+
   @hasMany(() => Wallet)
   wallets: Wallet[];
 
