@@ -7,23 +7,26 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {Transaction} from '../models';
-import {TransactionRepository} from '../repositories';
+import {TransactionRepository, WalletRepository} from '../repositories';
+import {updateWallet} from './util';
 
 export class TransactionController {
   constructor(
     @repository(TransactionRepository)
-    public transactionRepository : TransactionRepository,
+    public transactionRepository: TransactionRepository,
+    @repository(WalletRepository)
+    public walletRepository: WalletRepository,
   ) {}
 
   @post('/transactions')
@@ -44,7 +47,12 @@ export class TransactionController {
     })
     transaction: Omit<Transaction, 'id'>,
   ): Promise<Transaction> {
-    return this.transactionRepository.create(transaction);
+    // Update the Wallet
+    return updateWallet(
+      this.walletRepository,
+      this.transactionRepository,
+      transaction,
+    );
   }
 
   @get('/transactions/count')
@@ -106,7 +114,8 @@ export class TransactionController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Transaction, {exclude: 'where'}) filter?: FilterExcludingWhere<Transaction>
+    @param.filter(Transaction, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Transaction>,
   ): Promise<Transaction> {
     return this.transactionRepository.findById(id, filter);
   }
