@@ -40,7 +40,7 @@ export class Wallet extends Entity {
     type: 'string',
     required: false,
   })
-  currency: string;
+  currency: Dinero.Currency;
 
   @hasMany(() => Transaction)
   transactions: Transaction[];

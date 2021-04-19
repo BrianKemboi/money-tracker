@@ -21,7 +21,7 @@ export class User extends Entity {
     type: 'string',
     required: true,
   })
-  preferedCurrency: string; // ISO 4217 currency code
+  preferedCurrency: Dinero.Currency; // ISO 4217 currency code
 
   @hasMany(() => Wallet)
   wallets: Wallet[];
