@@ -18,12 +18,15 @@ import {
   response,
 } from '@loopback/rest';
 import {Wallet} from '../models';
-import {WalletRepository} from '../repositories';
+import {UserRepository, WalletRepository} from '../repositories';
+import {createWallet} from './util';
 
 export class WalletController {
   constructor(
     @repository(WalletRepository)
     public walletRepository: WalletRepository,
+    @repository(UserRepository)
+    public userRepository: UserRepository,
   ) {}
 
   @post('/wallets')
@@ -44,7 +47,7 @@ export class WalletController {
     })
     wallet: Omit<Wallet, 'id'>,
   ): Promise<Wallet> {
-    return this.walletRepository.create(wallet);
+    return createWallet(this.walletRepository, this.userRepository, wallet);
   }
 
   @get('/wallets/count')
