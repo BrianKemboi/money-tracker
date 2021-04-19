@@ -7,13 +7,13 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
@@ -23,7 +23,7 @@ import {WalletRepository} from '../repositories';
 export class WalletController {
   constructor(
     @repository(WalletRepository)
-    public walletRepository : WalletRepository,
+    public walletRepository: WalletRepository,
   ) {}
 
   @post('/wallets')
@@ -52,9 +52,7 @@ export class WalletController {
     description: 'Wallet model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Wallet) where?: Where<Wallet>,
-  ): Promise<Count> {
+  async count(@param.where(Wallet) where?: Where<Wallet>): Promise<Count> {
     return this.walletRepository.count(where);
   }
 
@@ -70,9 +68,7 @@ export class WalletController {
       },
     },
   })
-  async find(
-    @param.filter(Wallet) filter?: Filter<Wallet>,
-  ): Promise<Wallet[]> {
+  async find(@param.filter(Wallet) filter?: Filter<Wallet>): Promise<Wallet[]> {
     return this.walletRepository.find(filter);
   }
 
@@ -106,7 +102,8 @@ export class WalletController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Wallet, {exclude: 'where'}) filter?: FilterExcludingWhere<Wallet>
+    @param.filter(Wallet, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Wallet>,
   ): Promise<Wallet> {
     return this.walletRepository.findById(id, filter);
   }

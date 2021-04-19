@@ -63,7 +63,7 @@ export class UserController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(User, {includeRelations: true}),
+          items: getModelSchemaRef(User, {includeRelations: false}),
         },
       },
     },
@@ -96,7 +96,7 @@ export class UserController {
     description: 'User model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(User, {includeRelations: true}),
+        schema: getModelSchemaRef(User, {includeRelations: false}),
       },
     },
   })
@@ -105,23 +105,6 @@ export class UserController {
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>,
   ): Promise<User> {
     return this.userRepository.findById(id, filter);
-  }
-
-  @get('/users/{id}/summary')
-  @response(200, {
-    description: 'User Summary',
-  })
-  async findSummaryById(@param.path.string('id') id: string) {
-    const user = await this.userRepository.findById(id);
-
-    const walletCount = user.wallets.length;
-    const balance = user.wallets[user.wallets.length - 1].balance;
-
-    return {
-      ...user,
-      walletCount: walletCount,
-      totalBalance: balance,
-    };
   }
 
   @patch('/users/{id}')
