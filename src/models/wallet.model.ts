@@ -30,6 +30,18 @@ export class Wallet extends Entity {
   })
   balance: number;
 
+  @property({
+    type: 'string',
+    required: false,
+  })
+  balanceFormated: string;
+
+  @property({
+    type: 'string',
+    required: false,
+  })
+  currency: string;
+
   @hasMany(() => Transaction)
   transactions: Transaction[];
 
